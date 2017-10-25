@@ -1,3 +1,5 @@
+#' @export logisticEM
+#' @import data.table
 logisticEM <- function(y, id, x, beta, lambda, k = length(lambda), epsilon = 1e-06, maxit = 100) {
     if (ncol(beta) != k)
         stop("Column number of initial beta does not match class number!")
@@ -31,8 +33,7 @@ logisticEM <- function(y, id, x, beta, lambda, k = length(lambda), epsilon = 1e-
         loglik <- sum(log(rowSums(temp)) + RM)
         all.loglik <- c(all.loglik, loglik)
         improve <- diff(all.loglik)
-        if (improve[length(improve)] < epsilon | iter >= maxit)
-            break
+        if (improve[length(improve)] < epsilon | iter >= maxit) break
 
         posteriorz <- temp/rowSums(temp)
         lambda.old <- lambda
@@ -51,7 +52,7 @@ logisticEM <- function(y, id, x, beta, lambda, k = length(lambda), epsilon = 1e-
     p.beta <- 2 - 2 * pnorm(temp)
     rownames(posteriorz) <- rid
     list(lambda = lambda, beta = beta, posteriorz = posteriorz, all.loglik = all.loglik[-1], se.beta = se.beta,
-        p.beta = p.beta)
+        p.beta = p.beta, y = y, id = id, x = x)
 }
 log1pexp <- function(x) {
     y <- x
