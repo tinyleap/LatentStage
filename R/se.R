@@ -1,6 +1,7 @@
 expit <- function(x) {
     1/(1 + exp(-x))
 }
+#' @export
 se_outer <- function(out) {
     xbeta <- data.matrix(out$x) %*% out$beta
     temp <- out$y * xbeta - log1pexp(xbeta)

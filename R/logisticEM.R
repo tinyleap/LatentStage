@@ -1,4 +1,3 @@
-#' @export logisticEM
 #' @import data.table
 logisticEM <- function(y, id, x, beta, lambda, k = length(lambda), epsilon = 1e-06, maxit = 100) {
     if (ncol(beta) != k)
@@ -41,8 +40,8 @@ logisticEM <- function(y, id, x, beta, lambda, k = length(lambda), epsilon = 1e-
 
         beta.old <- beta
         w <- match(id, rid)
-        updatebeta <- lapply(1:k, function(j) glm(y ~ . - 1, data = data.frame(as.matrix(x)), weights = posteriorz[w,
-            j], family = binomial()))
+        suppressWarnings(updatebeta <- lapply(1:k, function(j) glm(y ~ . - 1, data = data.frame(as.matrix(x)), weights = posteriorz[w,
+            j], family = binomial())))
         beta <- sapply(updatebeta, coef)
         iter <- iter + 1
     }
