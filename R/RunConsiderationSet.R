@@ -1,4 +1,4 @@
-#' @export RunConsiderationSet
+#' @export
 
 RunConsiderationSet<-function(YObservedInput, XConsidInput, XSelectInput, NumOpts, ASCConsid=0, ASCSelect=0, IncludedInput=0*YObservedInput+1, meth="L-BFGS-B", Tolerance=1e-5){
   
