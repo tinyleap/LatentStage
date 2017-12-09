@@ -10,7 +10,11 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports: data.table,
-    Matrix
+    Matrix,
+    stats,
+    changepoint,
+    chngpt,
+    zoo
 Suggests: matrixStats,
     gtools
 RoxygenNote: 6.0.1
