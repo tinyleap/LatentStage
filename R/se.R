@@ -1,6 +1,15 @@
 expit <- function(x) {
     1/(1 + exp(-x))
 }
+#' calculate outer-version standard errors of linear parameters and class proportions
+#'
+#' Calculate outer-version standard errors for estimate of linear parameters
+#' and class proportions
+#'
+#' @param out a list object obtained directly from \code{\link{LatentStage}}
+#' @return a list object with two attributes. \code{se.beta} is the outer-version SE of
+#' linear parameters. \code{se.lambda} is the outer-version SE of class proportions. Note
+#' in the \code{\link{LatentStage}} function, the latter is not provided.
 #' @export
 se_outer <- function(out) {
     xbeta <- data.matrix(out$x) %*% out$beta
