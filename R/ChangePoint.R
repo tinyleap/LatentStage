@@ -1,21 +1,3 @@
-#' Preselect changepoint for Poisson rate parameter
-#'
-#' Used in \code{\link{change.poisson}} to calculate significance of a
-#' user-selected location as a changepoint.
-#'
-#' The code behind calculating the significance of a changepoint is derived from
-#' \code{\link{changepoint}} package. Insert reference to original paper here,
-#' specifically on BIC for changepoint models.
-#'
-#' @param data The data on which you wish to test the significance of a
-#'   preselected changepoint.
-#' @param pre The changepoint in the data for which you wish to test the
-#'   significance.
-#'
-#' @return A data frame of values needed to calculate significance of location
-#'   as a changepoint.
-#'
-#' @export
 preselect.poisson.calc = function(data, pre) {
   if (pre >= length(data) | pre <= 0) {
     stop("Changepoint must be located between endpoints of variable range.")
@@ -56,24 +38,6 @@ preselect.poisson.calc = function(data, pre) {
   }
 }
 
-#' Preselect changepoint for Normal mean
-#'
-#' Used in \code{\link{change.normal}} to calculate significance of a
-#' user-selected location as a changepoint. Specific to \code{type = "Mean"}.
-#'
-#' The code behind calculating the significance of a changepoint is derived from
-#' \code{\link{changepoint}} package. Insert reference to original paper here,
-#' specifically on BIC for changepoint models.
-#'
-#' @param data The data on which you wish to test the significance of a
-#'   preselected changepoint.
-#' @param pre The changepoint in the data for which you wish to test the
-#'   significance.
-#'
-#' @return A data frame of values needed to calculate significance of location
-#'   as a changepoint.
-#'
-#' @export
 preselect.norm.mean.calc = function(data,pre){
   if (pre >= length(data) | pre <= 0) {
     stop("Changepoint must be located between endpoints of variable range.")
@@ -106,28 +70,6 @@ preselect.norm.mean.calc = function(data,pre){
   }
 }
 
-#' Preselect changepoint for Normal variance
-#'
-#' Used in \code{\link{change.normal}} to calculate significance of a
-#' user-selected location as a changepoint. Specific to \code{type = "Var"}.
-#'
-#' The code behind calculating the significance of a changepoint is derived from
-#' \code{\link{changepoint}} package. Insert reference to original paper here,
-#' specifically on BIC for changepoint models.
-#'
-#' @param data The data on which you wish to test the significance of a
-#'   preselected changepoint.
-#' @param pre The changepoint in the data for which you wish to test the
-#'   significance.
-#' @param know.mean Taken from \code{\link{change.normal}}, Boolean variable
-#'   indicating whether or not you wish to set value for "true mean" of data.
-#' @param mu Taken from \code{\link{change.normal}}, if \code{know.mean = TRUE},
-#'   single value that represents "true mean" of data.
-#'
-#' @return A data frame of values needed to calculate significance of location
-#'   as a changepoint.
-#'
-#' @export
 preselect.norm.var.calc = function(data,pre,know.mean,mu){
   if (pre >= length(data) | pre <= 0) {
     stop("Changepoint must be located between endpoints of variable range.")
@@ -165,24 +107,6 @@ preselect.norm.var.calc = function(data,pre,know.mean,mu){
   return(out)
 }
 
-#' Preselect changepoint for Normal mean and variance
-#'
-#' Used in \code{\link{change.normal}} to calculate significance of a
-#' user-selected location as a changepoint. Specific to \code{type = "MeanVar"}.
-#'
-#' The code behind calculating the significance of a changepoint is derived from
-#' \code{\link{changepoint}} package. Insert reference to original paper here,
-#' specifically on BIC for changepoint models.
-#'
-#' @param data The data on which you wish to test the significance of a
-#'   preselected changepoint.
-#' @param pre The changepoint in the data for which you wish to test the
-#'   significance.
-#'
-#' @return A data frame of values needed to calculate significance of location
-#'   as a changepoint.
-#'
-#' @export
 preselect.norm.meanvar.calc = function(data,pre){
   singledim=function(data,pre){
     n=length(data)
@@ -219,23 +143,6 @@ preselect.norm.meanvar.calc = function(data,pre){
   }
 }
 
-#' p-Value Calculator for Binary Discrete Data
-#'
-#' Calculates significance value, i.e. p-value, of a location in data as a
-#' changepoint, over range of specified threshold variable.
-#'
-#' Include information on likelihood ratio test for binary discrete data, as
-#' well as plugging the parameter of said test into the chi-squared distribution
-#' with degrees of freedom equal to 3.
-#'
-#' @param v Vector that contains response variable of interest.
-#' @param t Vector of same length containing threshold variable.
-#' @param cpt Value representing the location in data (either preselected or
-#'   determined rigorously) on which to test a changepoint.
-#'
-#' @return Single value, the p-value of a location as changepoint of y, over t.
-#'
-#' @export
 p.value <- function(v, t, cpt) {
   N = length(v)
   n = sum(v)
@@ -257,10 +164,6 @@ p.value <- function(v, t, cpt) {
 #' Fit changepoint model on data to test if there is a significant change in
 #' mean and/or variance of data.
 #'
-#' Proceed to describe details of changepoint model, changepoint package,
-#' preselect option, what to observe in data that can inform which changes in
-#' parameter may be the best fit, and anything else.
-#'
 #' @param v Vector that contains response variable of interest.
 #' @param pre A value  represents preselected changepoint for any model, should
 #'   the user wish to test a specific point in data; NA by default.
@@ -272,7 +175,7 @@ p.value <- function(v, t, cpt) {
 #' @param mu If \code{know.mean = TRUE}, single value that represents "true
 #'   mean" of data; NA by default.
 #'
-#' @return List of the following: Data frame that contains location of
+#' @return List of the following: Table that contains location of
 #'   changepoint(s) (either preselected or determined rigorously) ranked by
 #'   significance and its/their associated significance value(s); Single value
 #'   representing the MBIC threshold by which to base significance of a
@@ -326,10 +229,10 @@ change.normal = function(v, pre=NA, type="MeanVar", know.mean=FALSE, mu=NA) {
         rep=nrow(v)
         my_row=list()
         for(i in 1:rep){
-          my_row[[i]] = c(i, tmp[i,1], tmp[i,2] - tmp[i,3], p.value[i])
+          my_row[[i]] = c(tmp[i,1], tmp[i,2] - tmp[i,3], p.value[i])
         }
         my_df = as.data.frame(do.call(rbind,my_row))
-        colnames(my_df) = c("Changepoint #", "Changepoint Location", "Changepoint Penalty Value")
+        colnames(my_df) = c("Changepoint Location", "Changepoint Penalty Value")
         return(list(changepoint_data_frame = my_df, MBIC_penalty_threshold = cpt.pen))
       }
     } else if (type=="Var") {
@@ -366,10 +269,10 @@ change.normal = function(v, pre=NA, type="MeanVar", know.mean=FALSE, mu=NA) {
         p.value=1-exp(-2*exp(-alogn*sqrt(abs(tmp[,2]-tmp[,3]))+blogn))-exp(-2*exp(blogn))
         my_row=list()
         for(i in 1:rep){
-          my_row[[i]] = c(i, tmp[i,1], tmp[i,2] - tmp[i,3], p.value[i])
+          my_row[[i]] = c(tmp[i,1], tmp[i,2] - tmp[i,3], p.value[i])
         }
         my_df = as.data.frame(do.call(rbind,my_row))
-        colnames(my_df) = c("Changepoint #", "Changepoint Location", "Changepoint Penalty Value")
+        colnames(my_df) = c("Changepoint Location", "Changepoint Penalty Value")
         return(list(changepoint_data_frame = my_df, MBIC_penalty_threshold = cpt.pen))
       }
     } else if (type=="MeanVar") {
@@ -393,10 +296,10 @@ change.normal = function(v, pre=NA, type="MeanVar", know.mean=FALSE, mu=NA) {
         rep=nrow(v)
         my_row=list()
         for(i in 1:rep){
-          my_row[[i]] = c(i, tmp[i,1], tmp[i,2] - tmp[i,3], p.value[i])
+          my_row[[i]] = c(tmp[i,1], tmp[i,2] - tmp[i,3], p.value[i])
         }
         my_df = as.data.frame(do.call(rbind,my_row))
-        colnames(my_df) = c("Changepoint #", "Changepoint Location", "Changepoint Penalty Value")
+        colnames(my_df) = c("Changepoint Location", "Changepoint Penalty Value")
         return(list(changepoint_data_frame = my_df, MBIC_penalty_threshold = cpt.pen))
       }
     } else {
@@ -416,14 +319,14 @@ change.normal = function(v, pre=NA, type="MeanVar", know.mean=FALSE, mu=NA) {
     j = 1
     for (i in 1:(n/2 + 1)) {
       if (cpt@pen.value.full[i] >= cpt@pen.value) {
-        my_row = c(i, cpt@cpts.full[i,i], cpt@pen.value.full[i])
+        my_row = c(cpt@cpts.full[i,i], cpt@pen.value.full[i])
         my_df[[j]] = my_row
         j = j + 1
       }
     }
     if (length(my_df) != 0) {
       my_df = as.data.frame(do.call(rbind,my_df))
-      colnames(my_df) = c("Changepoint #", "Changepoint Location", "Changepoint Penalty Value")
+      colnames(my_df) = c("Changepoint Location", "Changepoint Penalty Value")
       return(list(changepoint_data_frame = my_df, MBIC_penalty_threshold = cpt@pen.value))
     } else {
       return("No significant changepoints were found. If you wish to see the significance of a particular changepoint, please use the 'pre' parameter.")
@@ -436,9 +339,6 @@ change.normal = function(v, pre=NA, type="MeanVar", know.mean=FALSE, mu=NA) {
 #' Fit changepoint model on data to test if there is a significant change in
 #' binary probability of one outcome versus other outcome.
 #'
-#' Proceed to describe details of changepoint model, chngpt package,
-#' \code{\link{p.value}}, and anything else from Rmd that may matter.
-#'
 #' @param v Vector that contains response variable of interest.
 #' @param pre A value represents preselected changepoint for any model, should
 #'   the user wish to test a specific point in data; NA by default.
@@ -449,7 +349,7 @@ change.normal = function(v, pre=NA, type="MeanVar", know.mean=FALSE, mu=NA) {
 #'   interaction of original data with another variable (i.e., a hierarchical
 #'   model); NA by default.
 #'
-#' @return Data frame that contains location of changepoint (either preselected
+#' @return Table that contains location of changepoint (either preselected
 #'   or determined rigorously) and its associated significance value.
 #'
 #' @examples
@@ -496,15 +396,12 @@ change.binary = function(v, t = seq(1, length(v)), x = rep(NA, length(v)), pre=N
 #' Fit changepoint model on data to test if there is a significant change in
 #' Poisson rate parameter of data.
 #'
-#' Proceed to describe details of changepoint model, changepoint package,
-#' preselect option, what to observe in data that indicates a Poisson
-#' changepoint model may be a good fit, and anything else.
 #'
 #' @param v Vector that contains response variable of interest.
-#' @param pre A value  represents preselected changepoint for any model, should
+#' @param pre A value represents preselected changepoint for any model, should
 #'   the user wish to test a specific point in data, NA by default.
 #'
-#' @return List of the following: Data frame that contains location of
+#' @return List of the following: Table that contains location of
 #'   changepoint(s) (either preselected or determined rigorously) ranked by
 #'   significance and its/their associated significance value(s); Single value
 #'   representing the MBIC threshold by which to base significance of a
@@ -548,10 +445,10 @@ change.poisson = function(v, pre=NA) {
       rep=nrow(v)
       my_row=list()
       for(i in 1:rep){
-        my_row[[i]]== c(i, tmp[i,1], tmp[i,2] - tmp[i,3])
+        my_row[[i]]== c(tmp[i,1], tmp[i,2] - tmp[i,3])
       }
       my_df = as.data.frame(do.call(rbind,my_row))
-      colnames(my_df) = c("Changepoint #", "Changepoint Location", "Changepoint Penalty Value")
+      colnames(my_df) = c("Changepoint Location", "Changepoint Penalty Value")
       return(list(changepoint_data_frame = my_df, MBIC_penalty_threshold = cpt.pen))
     }
   } else {
@@ -560,14 +457,14 @@ change.poisson = function(v, pre=NA) {
     j = 1
     for (i in 1:(n/2 + 1)) {
       if (cpt@pen.value.full[i] >= cpt@pen.value) {
-        my_row = c(i, cpt@cpts.full[i,i], cpt@pen.value.full[i])
+        my_row = c(cpt@cpts.full[i,i], cpt@pen.value.full[i])
         my_df[[j]] = my_row
         j = j + 1
       }
     }
     if (length(my_df) != 0) {
       my_df = as.data.frame(do.call(rbind,my_df))
-      colnames(my_df) = c("Changepoint #", "Changepoint Location", "Changepoint Penalty Value")
+      colnames(my_df) = c("Changepoint Location", "Changepoint Penalty Value")
       return(list(changepoint_data_frame = my_df, MBIC_penalty_threshold = cpt@pen.value))
     } else {
       return("No significant changepoints were found. If you wish to see the significance of a particular changepoint, please use the 'pre' parameter.")

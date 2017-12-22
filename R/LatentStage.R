@@ -1,31 +1,35 @@
-#' fit discrete heterogeneity model with multiple stages
+#'Discrete heterogeneity model with multiple stages
 #'
-#' Discrete heterogeneity model applies to scenario each subject is assigned a latent
-#' class, and fixed parameters are used across subjects in the same class. Multiple stages
-#' simply mean that more than one responses are allowed in fitting this model. Typically
-#' one response is nested with another one, but it doesn't have to be this case to fit the
-#' model.
+#'Discrete heterogeneity model is applicable to scenario in which each subject
+#'is assigned a latent class, and fixed parameters are used across subjects in
+#'the same class. Multiple stages simply mean that more than one responses are
+#'allowed in fitting this model. Typically, one response is nested with another,
+#'but it does not have to be this case to fit the model.
 #'
-#' Arbitrary number of covariates, repsonses and subject ids can be givin in the argument
-#' list, however, their number must be the same, which equal to the number of stages in
-#' this model. And of course, their dimension must match, which means row(X1) = length(y1)
-#' = length(id1).
+#'Arbitrary number of covariates, repsonses and subject ids can be given in the
+#'argument list. However, their number must be the same, i.e. equal to the
+#'number of stages in this model. Furthermore, dimensions must match, i.e.
+#'row(X1) = length(y1) = length(id1).
 #'
-#' @param nclass numbers of class for all subjects, this determines how many groups of
-#' different parameters will be obtained
-#' @param X1 covariate matrix of the first stage, similar for X2, X3, ...
-#' @param y1 responsed of the first stage, similar for y2, y3, ...
-#' @param id1 subject id of the first stage, similar for id2, id3, ...
-#' @return The output is a list object containing both arguments and results. \code{lambda}
-#' is the estimate of class proportions, which sum up to 1. \code{beta} contains estimates, SEs
-#' and p-values for all linear parameters. \code{posteriorz} lists the probability of each subject
-#' belonging to a specific group, the estimated class id is determined by which class maximizes
-#' the probability. \code{all.loglik} lists log-likelihood in each iteration. \code{y} is a list
-#' object of responses of all stages. \code{id} is a list object of subject ids of all stages.
-#' \code{x} is a list object of covariates of all stages. \code{AIC} is the AIC for current
-#' model. \code{BIC} is the BIC for current model. These two can be used for class number
-#' selection. \code{runtime} is the whole elapsed time to fit the model.
+#'@param nclass numbers of class for all subjects, this determines how many
+#'  groups of different parameters will be obtained
+#'@param ... X1: A covariate matrix of the first stage, similar for X2, X3, ...;
+#'  y1: A vector of response variables for the first stage, similar for y2, y3,
+#'  ...; id1: A vector of subject IDs of the first stage, similar for id2, id3,
+#'  ...
+#'@return A list object containing both arguments and results. \code{lambda} is
+#'  the estimate of class proportions, which sum up to 1. \code{beta} contains
+#'  estimates, SEs and p-values for all linear parameters. \code{posteriorz}
+#'  lists the probability of each subject belonging to a specific group, the
+#'  estimated class id is determined by which class maximizes the probability.
+#'  \code{all.loglik} lists log-likelihood in each iteration. \code{y} is a list
+#'  object of responses of all stages. \code{id} is a list object of subject ids
+#'  of all stages. \code{x} is a list object of covariates of all stages.
+#'  \code{AIC} is the AIC for current model. \code{BIC} is the BIC for current
+#'  model. These two can be used for class number selection. \code{runtime} is
+#'  the whole elapsed time to fit the model.
 #' @examples
+#' \donttest{
 #' data(threestage)
 #' attach(threestage)
 #' mod <- LatentStage(5, X1=stage1[, 4:7],
@@ -41,7 +45,8 @@
 #' mod <- LatentStage(3, y1 = browsed, y2 = wrote[nonmiss],
 #'                    id1 = respid, id2 = respid[nonmiss],
 #'                    X1 = agedif, X2 = agedif[nonmiss])
-#' @export
+#'}
+#'@export
 LatentStage <- function(nclass, ...) {
     tt <- proc.time()
     dots <- list(...)
@@ -86,6 +91,7 @@ LatentStage <- function(nclass, ...) {
         colnames(beta) <- paste('class', 1:nclass)
         colnames(se.beta) <- paste('class', 1:nclass)
         colnames(p.beta) <- paste('class', 1:nclass)
+        all.loglik <- all.loglik
         BIC <- -2*all.loglik[length(all.loglik)] + (length(beta) + nclass - 1)*log(length(unique(obsidall)))
         AIC <- -2*all.loglik[length(all.loglik)] + (length(beta) + nclass - 1)*2
     })

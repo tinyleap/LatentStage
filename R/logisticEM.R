@@ -1,4 +1,3 @@
-#' @import data.table
 logisticEM <- function(y, id, x, beta, lambda, k = length(lambda), epsilon = 1e-06, maxit = 100) {
     if (ncol(beta) != k)
         stop("Column number of initial beta does not match class number!")

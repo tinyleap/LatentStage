@@ -1,12 +1,13 @@
-Package: LatentStage
+Package: DCmods
 Type: Package
-Title: What the Package Does (Title Case)
+Title: What the Package Does (one line, title case)
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: c(person(given="Elizabeth", family="Bruch", role="aut"), person(given="Fred", family="Feinberg", role="aut"),
+            person(given="Cameron", family="Hollingshead", role=c("aut", "cre"), email="hollicam@umich.edu"),
+            person(given="Yue", family="Wang", role="aut"), person(given="Yujing", family="Zhou", role="aut"))
+Description: This package is a compilation of various statistical models useful for marketing and social research on choice behavior data.
+Depends: R (>= 3.3.1)
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: data.table,
@@ -16,5 +17,8 @@ Imports: data.table,
     chngpt,
     zoo
 Suggests: matrixStats,
-    gtools
+    gtools,
+    knitr,
+    rmarkdown
 RoxygenNote: 6.0.1
+VignetteBuilder: knitr

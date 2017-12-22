@@ -1,15 +1,16 @@
 expit <- function(x) {
     1/(1 + exp(-x))
 }
-#' calculate outer-version standard errors of linear parameters and class proportions
+#' Standard errors of parameters and proportions (outer-version)
 #'
-#' Calculate outer-version standard errors for estimate of linear parameters
-#' and class proportions
+#' Calculates outer-version standard errors for estimate of linear parameters
+#' and class proportions.
 #'
-#' @param out a list object obtained directly from \code{\link{LatentStage}}
-#' @return a list object with two attributes. \code{se.beta} is the outer-version SE of
-#' linear parameters. \code{se.lambda} is the outer-version SE of class proportions. Note
-#' in the \code{\link{LatentStage}} function, the latter is not provided.
+#' @param out A list object obtained directly from \code{\link{LatentStage}}
+#' @return A list object with two attributes. \code{se.beta} is the
+#'   outer-version SE of linear parameters. \code{se.lambda} is the
+#'   outer-version SE of class proportions. Note in the
+#'   \code{\link{LatentStage}} function that the latter is not provided.
 #' @export
 se_outer <- function(out) {
     xbeta <- data.matrix(out$x) %*% out$beta
@@ -52,6 +53,17 @@ se_outer <- function(out) {
     se <- sqrt(diag(Sigma))
     list(se.beta = matrix(se[nb], ncol = nclass, dimnames = dimnames(out$beta)), se.lambda = se[np])
 }
+#' Standard errors of parameters and proportions (standard version)
+#'
+#' Calculates standard errors for estimate of linear parameters and class
+#' proportions.
+#'
+#' @param out A list object obtained directly from \code{\link{LatentStage}}
+#' @return A list object with two attributes. \code{se.beta} is the standard SE
+#'   of linear parameters. \code{se.lambda} is the standard SE of class
+#'   proportions. Note in the \code{\link{LatentStage}} function that the latter
+#'   is not provided.
+#' @export
 se_standard <- function(out){
     xbeta <- out$x %*% out$beta
     expitxbeta <-expit(xbeta)
