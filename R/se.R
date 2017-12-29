@@ -13,7 +13,9 @@ expit <- function(x) {
 #'   \code{\link{LatentStage}} function that the latter is not provided.
 #' @export
 se_outer <- function(out) {
-    xbeta <- data.matrix(out$x) %*% out$beta
+    nclass <- length(out$lambda)
+    beta <- t(matrix(out$beta[,1], nclass))
+    xbeta <- data.matrix(out$x) %*% beta
     temp <- out$y * xbeta - log1pexp(xbeta)
     temp <- as.data.table(temp)
     temp <- temp[, lapply(.SD, sum), out$id]
@@ -28,7 +30,7 @@ se_outer <- function(out) {
     L <- c(f %*% matrix(out$lambda))
     f <- f/L
 
-    nclass <- length(out$lambda)
+    
     dlogL <- NULL
     for (k in 1:nclass) {
         temp <- (out$y - expit(xbeta[, k])) * out$x
@@ -51,7 +53,8 @@ se_outer <- function(out) {
     B <- N/(N - 1) * t(dlogL) %*% dlogL
     Sigma <- jacobi2 %*% solve(B) %*% t(jacobi2)  # back to lin.dep
     se <- sqrt(diag(Sigma))
-    list(se.beta = matrix(se[nb], ncol = nclass, dimnames = dimnames(out$beta)), se.lambda = se[np])
+    temp <- matrix(se[nb], ncol = nclass)
+    list(se.beta = matrix(t(temp), ncol = 1, dimnames = list(dimnames(out$beta)[[1]], 'outerSE')), se.lambda = se[np])
 }
 #' Standard errors of parameters and proportions (standard version)
 #'
